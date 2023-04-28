@@ -5,9 +5,7 @@ warnings.filterwarnings('ignore')
 
 
 class format:
-    def __init__(self, raw_links, identifier):
-        self.raw_links = raw_links
-        self.identifier = identifier
+    def __init__(self, raw_links):
 
         self.headers = {"user-agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64)\
         AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.5615.121 Safari/537.36"}
@@ -349,6 +347,7 @@ could not be converted and were discarded".format(str(len(final_links_list)), st
 if __name__ == '__main__':
     raw_links = []
     raw_links_path = input('\nPlease enter path to raw links file: ')
+    identifier = input('\nPlease enter an identifier for the output file: ')
 
     with open(raw_links_path, 'r') as file:
         lines = file.readlines()
@@ -357,7 +356,7 @@ if __name__ == '__main__':
 
     formatted_links = format(raw_links)
 
-    with open(self.identifier + '_cleaned_links.txt', 'w') as file:
+    with open(identifier + '_cleaned_links.txt', 'w') as file:
         for link in formatted_links:
             file.write(link + '\n')
 
