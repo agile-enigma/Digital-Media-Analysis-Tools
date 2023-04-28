@@ -344,6 +344,8 @@ could not be converted and were discarded".format(str(len(self.formatted_links))
                                                                                     len(self.formatted_links + self.final_sm_garbage))*100, 2),\
                                                   str(self.final_difference), len(self.garbage), len(self.shortened_urls_garbage)))
 
+        print("\n\nThe number of lines included in each garbage bin are:\n\n {0}".format(self.garbage_df.to_string(index=False)))
+        
         return self.formatted_links
 
 if __name__ == '__main__':
