@@ -26,7 +26,7 @@ In addition, this tool will print metrics for the conversion, which include:
 5) A breakdown of discarded social media links by platform.
 
 
-These metrics allow the user to better assess the confidence that should be attached to the integrity of the final results. The image below is an example of these metrics:
+These metrics allow the user to better assess the confidence that should be attached to the integrity of the final results. The image below provides an example of these metrics:
 
 <img width="999" alt="Screenshot 2023-04-28 at 1 01 55 AM" src="https://user-images.githubusercontent.com/110642777/235058409-150d9a16-5edc-4f19-a9d2-4cc62cb38762.png">
 
