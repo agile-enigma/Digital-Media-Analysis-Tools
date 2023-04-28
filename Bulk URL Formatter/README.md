@@ -14,7 +14,7 @@ This tool can either be run from the command line as a script, or be imported as
 
 To run it as a script simply type 'python3 url_formatter.py' and when prompted provided the full path to the .txt file containing newline-separated URLs.
 
-To run it within another script after import simply create a url_formatter.format class object by typing 'formatted_links = url_formatter.format(SOME_LIST)', where SOME_LIST is a list containing the unformatted URLs that you would like to format. This will return another list consisting of the formatted links.
+To access its .format() function as a module type 'formatted_links = url_formatter.formatter(SOME_LIST).clean()' after importing, where SOME_LIST is a list containing the unformatted URLs that you would like to format. This will return another list consisting of the formatted links.
 
 In addition, the tool will print metrics for the conversion, which include: 
 
