@@ -4,7 +4,7 @@ Bulk URL Formatter is intended to solve the problem of converting a list of URLs
 2) Convert short URLs to the URLs that they shorten.
 3) Remove subdirectories from URLs, leaving only the domain.
 
-It should be noted that as this tool was created for cleaning links scraped from Telegram chats, the non-link filter will not discard non-links that are not typical of Telegram link scrapes. This can be made to suit your needs by modifying the REGEX on line 93, seen below:
+It should be noted that as this tool was created for cleaning links scraped from Telegram chats, the non-link filter will not discard non-links that are not typical of Telegram link scrapes. This can be made to suit your needs by modifying the REGEX on line 94, as seen below:
 
 <img width="488" alt="Screenshot 2023-04-28 at 1 09 20 AM" src="https://user-images.githubusercontent.com/110642777/235059465-9a4b6f35-60e4-434f-8c87-424918cf3862.png">
 
