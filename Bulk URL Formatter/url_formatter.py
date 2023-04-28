@@ -4,10 +4,11 @@ import warnings
 warnings.filterwarnings('ignore')
 
 
-class format:
+class formatter:
     def __init__(self, raw_links):
         self.raw_links = raw_links
 
+    def format(self):
         self.headers = {"user-agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64)\
         AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.5615.121 Safari/537.36"}
 
@@ -355,7 +356,7 @@ if __name__ == '__main__':
         for line in lines:
             raw_links.append(line.replace("\n", ""))
 
-    formatted_links = format(raw_links)
+    formatted_links = formatter(raw_links).format()
 
     with open(identifier + '_cleaned_links.txt', 'w') as file:
         for link in formatted_links:
