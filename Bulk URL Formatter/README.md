@@ -44,11 +44,11 @@ The platform-specific garbage bins are as follows:
 
 In addition, the clean() method will print metrics for URL processing, which include: 
 
-1) The total number of URLs that were successfully converted.
+1) The total number of URLs that were successfully cleaned.
 2) The total number of lines that were could either not be converted into a useful format or were not links and were consequently discarded.
-3) Discarded social media links as a percentage of total links (including succesfully converted links and links that could not be converted).
-4) The total number of shortened URLs that could not be unshortened.
-5) A breakdown of discarded social media links by platform.
+3) Discarded social media links as a percentage of total links (including succesfully converted links and links that could not be cleaned).
+4) A breakdown of discarded social media links by platform.
+5) The total number of shortened URLs that could not be unshortened.
 
 The image below provides an example of these metrics:
 
