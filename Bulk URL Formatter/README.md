@@ -4,7 +4,7 @@ Bulk URL Formatter is intended to solve the problem of converting a list of URLs
 2) Convert short URLs to the URLs that they shorten.
 3) Remove subdirectories from URLs, leaving only domains.
 
-When necessary, the tool extracts required information from the the source code of webpages.
+When necessary, the tool extracts required information from the source code of webpages.
 
 It should be noted that as this tool was created for cleaning links scraped from Telegram chats, the non-link filter will not discard non-links that are not typical of Telegram link scrapes. This can be made to suit your needs by modifying the REGEX on line 132, as seen below:
 
@@ -25,7 +25,7 @@ To use the tool as a module, first create a url_formatter object by typing "exam
 
 After creating a url_formatter object executing a method is as simple as typing either "example_name.unshorten()" or "example_name.clean()". These methods will return a list containing the unshortened or cleaned links. If your list contains shortened URLs, it is advised that you run the unshorten() method first.
 
-# Built-In Integrity Check and Troubleshooting Features 
+# Built-in Integrity Check and Troubleshooting Features 
 
 Bulk URL Formatter contains features that enable users to assess the integrity of results and troubleshoot any issues that might arise.
 
