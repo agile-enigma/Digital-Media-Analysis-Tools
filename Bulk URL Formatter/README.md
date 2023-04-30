@@ -55,5 +55,5 @@ The unshorten() method will indicate how many shortened URLs were detected, and 
 <img width="594" alt="Screenshot 2023-04-30 at 1 55 23 AM" src="https://user-images.githubusercontent.com/110642777/235338107-2600410c-adc0-4ca1-bd0b-36437672f4d9.png">
 
 
-These metrics allow the user to better assess the confidence that should be attached to the integrity of the final results. 
+These metrics allow the user to better assess the integrity of the final results. 
 
