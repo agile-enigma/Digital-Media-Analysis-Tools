@@ -1,30 +1,33 @@
-import os, csv, re, requests, pandas as pd
-import urlexpander, getopt, sys
+import re
+import requests
+import pandas as pd
+import urlexpander
+import getopt
+import sys
 from bs4 import BeautifulSoup
-import warnings
-warnings.filterwarnings('ignore')
+
 
 class formatter:
     def __init__(self, raw_links):
         self.raw_links = raw_links
         
-        #known_shorteners contains a list of url shorteners that will
-        #be used to extract shortened URLs from raw_links
+        # known_shorteners contains a list of url shorteners that will
+        # be used to extract shortened URLs from raw_links
         self.known_shorteners = urlexpander.constants.all_short_domains.copy()
         self.known_shorteners += ['youtu.be', 'shorturl.me']
         
-        #produce a list containing only shortened URLs
-        self.shortened_urls_list = [link for link in self.raw_links if \
-            urlexpander.is_short(link, list_of_domains=self.known_shorteners)]
+        # produce a list containing only shortened URLs
+        self.shortened_urls_list = [link for link in self.raw_links if 
+                                    urlexpander.is_short(link, list_of_domains=self.known_shorteners)]
         self.shortened_urls_garbage = []
         
-        #errors_df is a pandas dataframe containing error messages
+        # errors_df is a pandas dataframe containing error messages
         self.unshorten_errors_df = pd.DataFrame({'url': [],
-                                  'error_message': [],
-                                  'platform': []})
+                                                 'error_message': [],
+                                                 'platform': []})
         self.clean_errors_df = pd.DataFrame({'url': [],
-                                  'error_message': [],
-                                  'platform': []})
+                                             'error_message': [],
+                                             'platform': []})
                                   
         self.headers = {"user-agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64)\
         AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.5615.121 Safari/537.36"}
@@ -32,18 +35,17 @@ class formatter:
         self.unshorten_executed = False
         self.clean_executed = False
 
-        
     def unshorten(self):
+        
         self.not_shortened_links = []
         self.expanded_urls_list = []
         self.shortened_urls_garbage = []
         
-        if self.unshorten_executed == True:
-            self.unshorten_errors_df = pd.DataFrame({'url': [],
-                                  'error_message': [],
-                                  'platform': []})
+        self.unshorten_errors_df = pd.DataFrame({'url': [],
+                                                 'error_message': [],
+                                                 'platform': []})
 
-        #produce a list consisting of expanded URLs
+        # produce a list consisting of expanded URLs
         # expanded_urls_list = urlexpander.expand(shortened_urls_list[:50])
         def unshorten_url(url):
             if not re.match('https?://', url):
@@ -62,17 +64,18 @@ class formatter:
                     self.expanded_urls_list.append(unshortened_url)
                 else:
                     self.shortened_urls_garbage.append(url)
-                    self.unshorten_errors_df.loc[len(self.unshorten_errors_df.index)] = [url, error, 'shortened_url']
+                    self.unshorten_errors_df.loc[len(self.unshorten_errors_df.index)]\
+                        = [url, error, 'shortened_url']
 
         for url in self.shortened_urls_list:
             unshorten_url(url)
 
-        #substract shortened URLs from raw_links to produce not_shortened_links
+        # substract shortened URLs from raw_links to produce not_shortened_links
         for link in self.raw_links:
             if not urlexpander.is_short(link, list_of_domains=self.known_shorteners):
                 self.not_shortened_links.append(link)
 
-        #combine not_shortened_links with expanded_urls_list
+        # combine not_shortened_links with expanded_urls_list
         self.raw_with_expansion = self.not_shortened_links + self.expanded_urls_list
         self.raw_with_expansion = [re.sub('https?://(www\.)?', '', i) for i in self.raw_with_expansion]
 
@@ -80,28 +83,27 @@ class formatter:
         print(f'\n{len(self.shortened_urls_list)} shortened URLs were detected, of which \
 {len(self.expanded_urls_list)} were successfully converted.\n')
 
-        self.joined_errors_df = self.unshorten_errors_df._append(self.clean_errors_df, \
-            ignore_index=True)
+        self.joined_errors_df = self.unshorten_errors_df._append(self.clean_errors_df,
+                                                                 ignore_index=True)
             
         return self.raw_with_expansion
-        #discarded = len(self.raw_links) - len(raw_with_expansion + shortened_urls_garbage)
-        #print(f'{discarded} links have been lost up to this point')
-
+        # discarded = len(self.raw_links) - len(raw_with_expansion + shortened_urls_garbage)
+        # print(f'{discarded} links have been lost up to this point')
 
     def clean(self):
-        if self.clean_executed == True:
-            self.clean_errors_df = pd.DataFrame({'url': [],
-                                      'error_message': [],
-                                      'platform': []})
-                                      
-        if self.unshorten_executed == False:
-            self.raw_with_expansion = self.raw_links.copy()
-            self.raw_with_expansion = [i for i in self.raw_with_expansion\
-                                        if i not in self.shortened_urls_list]
-            self.raw_with_expansion = [re.sub('https?://(www\.)?', '', i) \
-                for i in self.raw_with_expansion]
 
-        #categorize and format social media links
+        self.clean_errors_df = pd.DataFrame({'url': [],
+                                             'error_message': [],
+                                             'platform': []})
+                                      
+        if self.unshorten_executed is False:
+            self.raw_with_expansion = self.raw_links.copy()
+            self.raw_with_expansion = [i for i in self.raw_with_expansion
+                                       if i not in self.shortened_urls_list]
+            self.raw_with_expansion = [re.sub('https?://(www\.)?', '', i)
+                                       for i in self.raw_with_expansion]
+
+        # categorize and format social media links
         self.sm_urls_list = []
         self.non_sm_urls_list = []
         self.sm_other_urls_list = []
@@ -217,7 +219,8 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
                             self.rumble_garbage.append(link)
                     except Exception as error:
                         link = re.sub('https://', '', link)
-                        self.clean_errors_df.loc[len(self.clean_errors_df.index)] = [link, error, 'rumble']
+                        self.clean_errors_df.loc[len(self.clean_errors_df.index)] = \
+                                                [link, error, 'rumble']
                         self.rumble_garbage.append(link)
             elif re.match('gettr\.com', link):
                 if re.match('gettr\.com/user/', link):
@@ -257,7 +260,7 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
         self.sm_other_urls_list = [re.sub('\?.*', '', i) for i in self.sm_other_urls_list]
         self.sm_urls_list = self.sm_urls_list + self.sm_other_urls_list
 
-        #format yt_watch links
+        # format yt_watch links
         self.yt_watch_garbage = []
         for link in self.youtube_watch_list:
             try:
@@ -276,7 +279,7 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
         #         print('yt watch error: ' + str(error))
                 self.yt_watch_garbage.append(link)
 
-        #format fb_watch links
+        # format fb_watch links
         self.fb_watch_garbage = []
         for link in self.fb_watch_list:
             try:
@@ -297,7 +300,7 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
         #         print('fb watch error: ' + str(error))
                 self.fb_watch_garbage.append(link)
 
-        #format vk links
+        # format vk links
         self.vk_garbage = []
         for link in self.vk_list:
             try:
@@ -328,49 +331,50 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
                 else:
                     self.vk_garbage.append(link)
             except Exception as error:
-                self.clean_errors_df.loc[len(self.clean_errors_df.index)] = [link, error, 'vk']
+                self.clean_errors_df.loc[len(self.clean_errors_df.index)]\
+                                        = [link, error, 'vk']
                 self.vk_garbage.append(link)
         #         print('error:', link)
 
-        #compile and sort final links list
+        # compile and sort final links list
         self.formatted_links = self.sm_urls_list + self.non_sm_urls_list
         self.formatted_links = [i.lower() for i in self.formatted_links]
         self.formatted_links = [re.sub('^www\.', '', i) for i in self.formatted_links]
         self.formatted_links.sort()
 
-        #compile garbage and print garbage stats
+        # compile garbage and print garbage stats
         self.final_sm_garbage = self.facebook_garbage + self.ig_garbage + self.yt_watch_garbage \
-                                + self.vk_garbage + self.fb_watch_garbage + self.youtube_garbage \
-                                + self.bitchute_garbage + self.odysee_garbage + self.rumble_garbage \
-                                + self.gettr_garbage + self.twitter_garbage + self.tiktok_garbage
+            + self.vk_garbage + self.fb_watch_garbage + self.youtube_garbage \
+            + self.bitchute_garbage + self.odysee_garbage + self.rumble_garbage \
+            + self.gettr_garbage + self.twitter_garbage + self.tiktok_garbage
 
-        #final_overall_garbage will tell us how many lines were put in a garbage
-        #list while converting raw_links to formatted_links.
-        #We want this to equal final_difference.
-        if self.unshorten_executed == True:
+        # final_overall_garbage will tell us how many lines were put in a garbage
+        # list while converting raw_links to formatted_links.
+        # We want this to equal final_difference.
+        if self.unshorten_executed is True:
             self.final_overall_garbage = len(self.final_sm_garbage + self.garbage + self.shortened_urls_garbage \
-                                            + self.mail_garbage)
+                                             + self.mail_garbage)
         else:
             self.final_overall_garbage = len(self.final_sm_garbage + self.garbage + self.shortened_urls_list \
-                                            + self.mail_garbage)
+                                             + self.mail_garbage)
 
-        #final_difference will tell us how many lines were discarded in the process
+        # final_difference will tell us how many lines were discarded in the process
         #of converting raw_links to formatted_links
         self.final_difference = len(self.raw_links) - len(self.formatted_links)
 
-        #garbage_less_difference will tell us how many of the lines that were discarded
-        #in the process of converting raw_links to  formatted_links are unaccounted for
-        #by final_overall_garbage. We want this to equal zero.
+        # garbage_less_difference will tell us how many of the lines that were discarded
+        # in the process of converting raw_links to  formatted_links are unaccounted for
+        # by final_overall_garbage. We want this to equal zero.
         self.garbage_less_difference = self.final_overall_garbage - self.final_difference
 
         self.garbage_df = pd.DataFrame({
-            'type': ['garbage', 'facebook', 'instagram', 'youtube', 'yt_watch', 'fb_watch', 'vkontakte', \
+            'type': ['garbage', 'facebook', 'instagram', 'youtube', 'yt_watch', 'fb_watch', 'vkontakte',
                      'bitchute', 'odysee', 'rumble', 'gettr', 'tiktok', 'shortened_urls'],
-            'count': [len(self.garbage), len(self.facebook_garbage), len(self.ig_garbage), \
-                        len(self.youtube_garbage), len(self.yt_watch_garbage), len(self.fb_watch_garbage), \
-                        len(self.vk_garbage), len(self.bitchute_garbage), len(self.odysee_garbage), \
-                        len(self.rumble_garbage), len(self.gettr_garbage), len(self.tiktok_garbage), \
-                        len(self.shortened_urls_garbage)]
+            'count': [len(self.garbage), len(self.facebook_garbage), len(self.ig_garbage),
+                      len(self.youtube_garbage), len(self.yt_watch_garbage), len(self.fb_watch_garbage),
+                      len(self.vk_garbage), len(self.bitchute_garbage), len(self.odysee_garbage),
+                      len(self.rumble_garbage), len(self.gettr_garbage), len(self.tiktok_garbage),
+                      len(self.shortened_urls_garbage)]
                       })
 
         self.garbage_df = self.garbage_df.sort_values('count', ascending=False)
@@ -378,26 +382,26 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
         print("\n\n{0} links in total were successfully cleaned.\n\n{1} links were lost and are \
 unaccounted for by final_overall_garbage.\n\n{2} URLs are included in final_sm_garbage, which is {3}% of \
 formatted_links + final_sm_garbage.\n\n{4} lines in total were discarded in the process of \
-cleaning links in the input file, of which {5} were non-links.".format(str(len(self.formatted_links)), \
-    str(self.garbage_less_difference), str(len(self.final_sm_garbage)), str(round((len(self.final_sm_garbage)/\
-    len(self.formatted_links + self.final_sm_garbage))*100, 2)),str(self.final_difference), str(len(self.garbage))))
+cleaning links in the input file, of which {5} were non-links.".format(str(len(self.formatted_links)),
+    str(self.garbage_less_difference), str(len(self.final_sm_garbage)), str(round((len(self.final_sm_garbage) / 
+    len(self.formatted_links + self.final_sm_garbage))*100, 2)), str(self.final_difference), str(len(self.garbage))))
 
-        if self.unshorten_executed == False:
+        if self.unshorten_executed is False:
             print(f'\n{len(self.shortened_urls_list)} shortened_urls were identified, which were \
 not unshortened owing to formatter.unshorten() not having been executed.')
         
-        print("\nThe number of lines included in each garbage bin are:\n\n {0}\n".\
-            format(self.garbage_df.to_string(index=False)))
+        print("\nThe number of lines included in each garbage bin are:\n\n {0}\n".
+              format(self.garbage_df.to_string(index=False)))
 
         self.clean_executed = True
         
-        self.joined_errors_df = self.unshorten_errors_df._append(self.clean_errors_df, \
-            ignore_index=True)
+        self.joined_errors_df = self.unshorten_errors_df._append(self.clean_errors_df,
+                                                                 ignore_index=True)
             
         return self.formatted_links
 
-    
 if __name__ == '__main__':
+
     def main():
         help_menu = '\nBulk URL Formatter converts links to a format that is analytically useful. \
 For more information see the README at github.com/agile-enigma/Digital-Media-Analysis\
@@ -408,10 +412,10 @@ For more information see the README at github.com/agile-enigma/Digital-Media-Ana
 
         argv = sys.argv[1:]
         try:
-            opts, args = getopt.getopt(argv,"uch",
-                                            ["unshorten",
-                                            "clean",
-                                            "help"])
+            opts, args = getopt.getopt(argv, "uch",
+                                       ["unshorten",
+                                        "clean",
+                                        "help"])
 
             u = False
             c = False
@@ -424,7 +428,7 @@ For more information see the README at github.com/agile-enigma/Digital-Media-Ana
                 if opt in ['-h', '--help']:
                     h = True
 
-            if h == True:
+            if h is True:
                 print(help_menu)
             else:
                 raw_links = []
@@ -436,24 +440,24 @@ For more information see the README at github.com/agile-enigma/Digital-Media-Ana
                     for line in lines:
                         raw_links.append(line.replace("\n", ""))
 
-                if u == True and c == True:
+                if u is True and c is True:
                     formatter_obj = formatter(raw_links)
                     expanded_links = formatter_obj.unshorten()
                     cleaned_links = formatter_obj.clean()
                     with open(identifier + '_cleaned_unshortened_links.txt', 'w') as file:
                         for link in cleaned_links:
                             file.write(link + '\n')
-                elif u == True:
+                elif u is True:
                     formatter_obj = formatter(raw_links)
                     expanded_links = formatter_obj.unshorten()
                     with open(identifier + '_unshortened_links.txt', 'w') as file:
-                        for link in formatted_links:
+                        for link in expanded_links:
                             file.write(link + '\n')
-                elif c == True:
+                elif c is True:
                     formatter_obj = formatter(raw_links)
                     cleaned_links = formatter_obj.clean()
                     with open(identifier + '_cleaned_links.txt', 'w') as file:
-                        for link in formatted_links:
+                        for link in cleaned_links:
                             file.write(link + '\n')
         except Exception as error:
             print(error)
