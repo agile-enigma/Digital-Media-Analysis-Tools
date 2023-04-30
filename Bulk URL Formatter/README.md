@@ -15,7 +15,7 @@ Here is an example of an input file:
 
 When necessary, the tool extracts required information from the source code of webpages.
 
-It should be noted that as this tool was created for cleaning links scraped from Telegram chats, the non-link filter will not discard non-links that are not typical of Telegram link scrapes. This can be made to suit your needs by modifying the REGEX on line 132, as seen below:
+It should be noted that as this tool was created for cleaning links scraped from Telegram chats, the non-URL filter will not discard non-URLs that are not typical of Telegram link scrapes. This can be made to suit your needs by modifying the REGEX on line 132, as seen below:
 
 <img width="488" alt="Screenshot 2023-04-28 at 1 09 20 AM" src="https://user-images.githubusercontent.com/110642777/235059465-9a4b6f35-60e4-434f-8c87-424918cf3862.png">
 
@@ -32,7 +32,7 @@ The -c/-clean option will run the program's clean() method, which does the work 
 
 To use the tool as a module, first create a url_formatter object by typing "example_name = url_formatter.formatter(SOME_LIST)", where SOME_LIST is a list containing the unformatted/unshortened URLs that you would like to convert. As noted, Bulk URL Formatter has two methods, unshorten() and clean(). 
 
-After creating a url_formatter object executing a method is as simple as typing either "example_name.unshorten()" or "example_name.clean()". These methods will return a list containing the unshortened or cleaned links. If your list contains shortened URLs, it is advised that you run the unshorten() method first.
+After creating a url_formatter object executing a method is as simple as typing either "example_name.unshorten()" or "example_name.clean()". These methods will return a list containing the unshortened or cleaned URLs. If your list contains shortened URLs, it is advised that you run the unshorten() method first.
 
 # Built-in Integrity Check and Troubleshooting Features 
 
@@ -55,8 +55,8 @@ In addition, the clean() method will print metrics for URL processing, which inc
 
 1) The total number of URLs that were successfully cleaned.
 2) The total number of lines that were could either not be converted into a useful format or were not links and were consequently discarded.
-3) Discarded social media links as a percentage of total links (including succesfully converted links and links that could not be cleaned).
-4) A breakdown of discarded social media links by platform.
+3) Discarded social media URLs as a percentage of total links (including succesfully converted URLs and URLs that could not be cleaned).
+4) A breakdown of discarded social media URLs by platform.
 5) The total number of shortened URLs that could not be unshortened.
 
 The image below provides an example of these metrics:
