@@ -81,7 +81,7 @@ class formatter:
 
         self.unshorten_executed = True
         print(f'\n{len(self.shortened_urls_list)} shortened URLs were detected, of which \
-{len(self.expanded_urls_list)} were successfully converted.\n')
+{len(self.expanded_urls_list)} were successfully unshortened.\n')
 
         self.joined_errors_df = self.unshorten_errors_df._append(self.clean_errors_df,
                                                                  ignore_index=True)
