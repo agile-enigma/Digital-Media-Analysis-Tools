@@ -25,6 +25,8 @@ To use the tool as a module, first create a url_formatter object by typing "exam
 
 # Built-In Integrity Check and Troubleshooting Features 
 
+Bulk URL Formatter contains features that enable users to assess the integrity of results and troubleshoot any issues that might arise.
+
 Attributes that may be of interest to the user include: 
 
 1) known_shorteners: contains the list of shorteners used to filter for shortened URLs
@@ -53,7 +55,5 @@ The image below provides an example of these metrics:
 The unshorten() method will indicate how many shortened URLs were detected, and how many were successfully unshortened:
 
 <img width="594" alt="Screenshot 2023-04-30 at 1 55 23 AM" src="https://user-images.githubusercontent.com/110642777/235338107-2600410c-adc0-4ca1-bd0b-36437672f4d9.png">
-
-
-These metrics allow the user to better assess the integrity of the final results. 
+ 
 
