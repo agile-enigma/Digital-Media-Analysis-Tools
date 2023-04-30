@@ -23,6 +23,8 @@ The -c/-clean option will run the program's clean() method, which does the work 
 
 To use the tool as a module, first create a url_formatter object by typing "example_name = url_formatter.formatter(SOME_LIST)", where SOME_LIST is a list containing the unformatted/unshortened URLs that you would like to convert. As noted, Bulk URL Formatter has two methods, unshorten() and clean(). After creating a url_formatter object executing a method is as simple as typing either "example_name.unshorten()" or "example_name.clean()".
 
+# Built-In Integrity Checks
+
 Attributes that may be of interest to the user include: 
 
 1) known_shorteners: contains the list of shorteners used to filter for shortened URLs
