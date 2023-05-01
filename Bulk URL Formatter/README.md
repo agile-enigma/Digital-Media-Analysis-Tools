@@ -43,7 +43,7 @@ Attributes that may be of interest to the user include:
 1) known_shorteners: contains the list of shorteners used to filter for shortened URLs
 2) clean_errors_df: pandas dataframe containing error messages and associated URLs produced while executing the clean() method
 3) unshorten_errors_df: pandas dataframe containing error messages and associated URLs produced while executing the unshorten() method
-4) joined_errors_df: pandas dataframe combining clean_errors_df and unshorten_urls_df
+4) joined_errors_df: pandas dataframe combining clean_errors_df and unshorten_errors_df
 5) garbage_df: pandas dataframe containing counts for the number of lines that were discarded owing to an error, a failure of the program to extract target information from source code, or to their not being URLs. This data frame aggregates the garbage bins listed below.
 
 The platform-specific garbage bins are as follows:
