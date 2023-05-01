@@ -28,7 +28,7 @@ To run it as a script simply type "python3 url_formatter.py" along with the desi
 <img width="352" alt="Screenshot 2023-04-30 at 1 20 42 AM" src="https://user-images.githubusercontent.com/110642777/235337006-2250052b-9e1d-40b9-86a9-07120316ee29.png">
 
 
-The -c/--clean option will run the program's clean() method, which does the work of cleaning URLs. The -u/--unshorten option runs the unshorten() method, which unshortens URLs. Both will output their results to a text file located in the directory that the script is executed from. Both options can ge run together, in which case the script will first run the unshorten() method and then the clean() method.
+The -c/--clean option will run the program's clean() method, which does the work of cleaning URLs. The -u/--unshorten option runs the unshorten() method, which unshortens URLs. Both command line options will output their results to a text file located in the directory that the script is executed from. Both options can ge run together, in which case the script will first run the unshorten() method and then the clean() method.
 
 To use the tool as a module, first create a url_formatter object by typing "example_name = url_formatter.formatter(SOME_LIST)", where SOME_LIST is a list containing the unformatted/unshortened URLs that you would like to convert. As noted, Bulk URL Formatter has two methods, unshorten() and clean(). 
 
