@@ -61,7 +61,7 @@ In addition, the clean() method will print metrics for URL processing, which inc
 
 The image below provides an example of these metrics:
 
-<img width="765" alt="Screenshot 2023-04-30 at 1 23 37 AM" src="https://user-images.githubusercontent.com/110642777/235337120-c0810c42-a22b-438c-b32e-d01a523ff2c2.png">
+<img width="665" alt="Screenshot 2023-05-02 at 2 02 44 AM" src="https://user-images.githubusercontent.com/110642777/235590794-0d671a56-2024-4456-beaf-255784b5e9c4.png">
 
 The unshorten() method will indicate how many shortened URLs were detected, and how many were successfully unshortened:
 
