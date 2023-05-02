@@ -6,7 +6,6 @@ import getopt
 import sys
 from bs4 import BeautifulSoup
 
-
 class formatter:
     def __init__(self, raw_links):
         self.raw_links = raw_links
