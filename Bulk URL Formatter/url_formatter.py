@@ -387,14 +387,14 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
 
         self.garbage_df = self.garbage_df.sort_values('count', ascending=False)
 
-        print(f"\n\n{len(self.formatted_links)} URLs in total were successfully cleaned.\n\n\
-{self.garbage_less_difference} URLs were lost and are unaccounted for by final_overall_garbage.\n\n\
-{len(self.final_sm_garbage)} URLs are included in final_sm_garbage, which is \
-{round((len(self.final_sm_garbage) / len(self.formatted_links + self.final_sm_garbage))*100, 2)}% of \
-formatted_links + final_sm_garbage.\n\n\
-{self.final_difference} lines in total were discarded in the process of cleaning, \
-of which {len(self.garbage)} were non-URLs.\n\n\
-{len(self.clean_errors_df)} errors were produced in the cleaning process.")
+        print(f"\n\n{len(self.formatted_links)} URLs in total were successfully cleaned." + "\n\n" +
+              f"{self.garbage_less_difference} URLs were lost and are unaccounted for by final_overall_garbage." + "\n\n" +
+              f"{len(self.final_sm_garbage)} URLs are included in final_sm_garbage, which is " +
+              f"{round((len(self.final_sm_garbage) / len(self.formatted_links + self.final_sm_garbage))*100, 2)}% of " +
+              f"formatted_links + final_sm_garbage." + "\n\n" +
+              f"{self.final_difference} lines in total were discarded in the cleaning process, " +
+              f"of which {len(self.garbage)} were non-URLs." + "\n\n" +
+              f"{len(self.clean_errors_df)} errors were produced in the cleaning process.")
 
         if self.unshorten_executed is False:
             print(f'\n{len(self.shortened_urls_list)} shortened_urls were identified, which were \
