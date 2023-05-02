@@ -388,7 +388,7 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
         self.garbage_df = self.garbage_df.sort_values('count', ascending=False)
 
         print(f"\n\n{len(self.formatted_links)} links in total were successfully cleaned.\n\n\
-        {self.garbage_less_difference} links were lost and are \unaccounted for by final_overall_garbage.\n\n\
+        {self.garbage_less_difference} links were lost and are unaccounted for by final_overall_garbage.\n\n\
         {len(self.final_sm_garbage)} URLs are included in final_sm_garbage, which is \
         {round((len(self.final_sm_garbage) / len(self.formatted_links + self.final_sm_garbage))*100, 2)}% of \
         formatted_links + final_sm_garbage.\n\n{self.final_difference} lines in total were discarded in the \
