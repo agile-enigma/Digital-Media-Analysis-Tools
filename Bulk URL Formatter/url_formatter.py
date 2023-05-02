@@ -318,6 +318,15 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
                         self.sm_urls_list.append(link)
                     else:
                         self.vk_garbage.append(link)
+                elif re.search('vk\.com/wall', link):
+                    page_content = requests.get('https://' + link).content
+                    soup = BeautifulSoup(page_content, 'html.parser')
+                    soup_find = soup.find('a').get('href')
+                    link = 'vk.com' + soup_find
+                    self.sm_urls_list.append(link)
+                elif re.search('vk\.com/.*\?\w(=photo|=wall)', link):
+                    link = re.sub('\?.*', '', link)
+                    self.sm_urls_list.append(link)
                 elif re.search('vk\.com/\w+$', link):
                     page_content = requests.get('https://' + link).content
                     soup = BeautifulSoup(page_content, 'html.parser')
@@ -382,9 +391,9 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
         print("\n\n{0} links in total were successfully cleaned.\n\n{1} links were lost and are \
 unaccounted for by final_overall_garbage.\n\n{2} URLs are included in final_sm_garbage, which is {3}% of \
 formatted_links + final_sm_garbage.\n\n{4} lines in total were discarded in the process of \
-cleaning links in the input file, of which {5} were non-links.".format(str(len(self.formatted_links)),
+cleaning links in the input file, of which {5} were non-links.\n\nThere were {6} errors".format(str(len(self.formatted_links)),
     str(self.garbage_less_difference), str(len(self.final_sm_garbage)), str(round((len(self.final_sm_garbage) / 
-    len(self.formatted_links + self.final_sm_garbage))*100, 2)), str(self.final_difference), str(len(self.garbage))))
+    len(self.formatted_links + self.final_sm_garbage))*100, 2)), str(self.final_difference), str(len(self.garbage)), str(len(self.errors_df))))
 
         if self.unshorten_executed is False:
             print(f'\n{len(self.shortened_urls_list)} shortened_urls were identified, which were \
