@@ -23,7 +23,7 @@ It should be noted that as this tool was created for cleaning links scraped from
 # Usage
 This tool can either be run from the command line as a script, or imported as a module. 
 
-To run it as a script simply type "python3 url_formatter.py" along with the desired options and when prompted provided the full path to the .txt file containing newline-separated URLs as well as the identifier that you'd like to use for ouput file-naming purposes. The options are as follows:
+To run it from the command line simply type "python3 url_formatter.py" along with the desired options and when prompted provided the full path to the .txt file containing newline-separated URLs as well as the identifier that you'd like to use for ouput file-naming purposes. The options are as follows:
 
 <img width="352" alt="Screenshot 2023-04-30 at 1 20 42 AM" src="https://user-images.githubusercontent.com/110642777/235337006-2250052b-9e1d-40b9-86a9-07120316ee29.png">
 
