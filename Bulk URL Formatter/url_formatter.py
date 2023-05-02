@@ -393,7 +393,7 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
         {round((len(self.final_sm_garbage) / len(self.formatted_links + self.final_sm_garbage))*100, 2)}% of \
         formatted_links + final_sm_garbage.\n\n{self.final_difference} lines in total were discarded in the \
         process of cleaning links in the input file, of which {len(self.garbage)} were non-links.\n\n\
-        {len(self.errors_df)} errors were produced")
+        {len(self.clean_errors_df)} errors were produced in the cleaning process.")
 
         if self.unshorten_executed is False:
             print(f'\n{len(self.shortened_urls_list)} shortened_urls were identified, which were \
