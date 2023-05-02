@@ -391,7 +391,7 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
 {self.garbage_less_difference} URLs were lost and are unaccounted for by final_overall_garbage.\n\n\
 {len(self.final_sm_garbage)} URLs are included in final_sm_garbage, which is \
 {round((len(self.final_sm_garbage) / len(self.formatted_links + self.final_sm_garbage))*100, 2)}% of \
-formatted_links + final_sm_garbage.\n\n
+formatted_links + final_sm_garbage.\n\n\
 {self.final_difference} lines in total were discarded in the process of cleaning, \
 of which {len(self.garbage)} were non-URLs.\n\n\
 {len(self.clean_errors_df)} errors were produced in the cleaning process.")
