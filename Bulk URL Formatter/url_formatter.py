@@ -336,6 +336,8 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
                         self.sm_urls_list.append(link)
                     else:
                         self.vk_garbage.append(link)
+                elif re.search('vk\.com/[\w\.]+$', link):
+                    sm_urls_list.append(link)
                 else:
                     self.vk_garbage.append(link)
             except Exception as error:
