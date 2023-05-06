@@ -19,6 +19,7 @@ It should be noted that as this tool was created for cleaning links scraped from
 
 <img width="488" alt="Screenshot 2023-04-28 at 1 09 20 AM" src="https://user-images.githubusercontent.com/110642777/235059465-9a4b6f35-60e4-434f-8c87-424918cf3862.png">
 
+If you prefer to use this tool as a Jupyter Notebook you can find that at: https://github.com/agile-enigma/Blog-Research-Projects/blob/main/The%20Dugin%20International/format%2Banalyze_links_GitHub.ipynb
 
 # Usage
 This tool can either be run from the command line as a script, or imported as a module. 
