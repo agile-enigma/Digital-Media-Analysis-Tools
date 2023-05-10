@@ -18,19 +18,14 @@ class formatter:
 
         # produce a list containing only shortened URLs
         self.shortened_urls_list = [
-            link
-            for link in self.raw_links
+            link for link in self.raw_links
             if urlexpander.is_short(link, list_of_domains=self.known_shorteners)
         ]
         self.shortened_urls_garbage = []
 
         # errors_df is a pandas dataframe containing error messages
-        self.unshorten_errors_df = pd.DataFrame(
-            {"url": [], "error_message": [], "platform": []}
-        )
-        self.clean_errors_df = pd.DataFrame(
-            {"url": [], "error_message": [], "platform": []}
-        )
+        self.unshorten_errors_df = pd.DataFrame({"url": [], "error_message": [], "platform": []})
+        self.clean_errors_df = pd.DataFrame({"url": [], "error_message": [], "platform": []})
 
         self.headers = {
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)\
@@ -45,12 +40,8 @@ class formatter:
         self.expanded_urls_list = []
         self.shortened_urls_garbage = []
 
-        self.unshorten_errors_df = pd.DataFrame(
-            {"url": [], "error_message": [], "platform": []}
-        )
+        self.unshorten_errors_df = pd.DataFrame({"url": [], "error_message": [], "platform": []})
 
-        # produce a list consisting of expanded URLs
-        # expanded_urls_list = urlexpander.expand(shortened_urls_list[:50])
         def unshorten_url(url):
             if not re.match("https?://", url):
                 url = "https://" + url
@@ -64,15 +55,11 @@ class formatter:
                 print(url)
                 if len(re.findall("(?<=host=').*(?=', port)", str(error))) != 0:
                     unshortened_url = re.findall("(?<=host=').*(?=', port)", str(error))
-                    unshortened_url = re.sub(
-                        "https?://(www\.)?", "", unshortened_url[0]
-                    )
+                    unshortened_url = re.sub("https?://(www\.)?", "", unshortened_url[0])
                     self.expanded_urls_list.append(unshortened_url)
                 else:
                     self.shortened_urls_garbage.append(url)
-                    self.unshorten_errors_df.loc[
-                        len(self.unshorten_errors_df.index)
-                    ] = [url, error, "shortened_url"]
+                    self.unshorten_errors_df.loc[len(self.unshorten_errors_df.index)] = [url, error, "shortened_url"]
 
         for url in self.shortened_urls_list:
             unshorten_url(url)
@@ -84,9 +71,7 @@ class formatter:
 
         # combine not_shortened_links with expanded_urls_list
         self.raw_with_expansion = self.not_shortened_links + self.expanded_urls_list
-        self.raw_with_expansion = [
-            re.sub("https?://(www\.)?", "", i) for i in self.raw_with_expansion
-        ]
+        self.raw_with_expansion = [re.sub("https?://(www\.)?", "", i) for i in self.raw_with_expansion]
 
         self.unshorten_executed = True
         print(
@@ -94,25 +79,17 @@ class formatter:
 {len(self.expanded_urls_list)} were successfully unshortened.\n"
         )
 
-        self.joined_errors_df = self.unshorten_errors_df._append(
-            self.clean_errors_df, ignore_index=True
-        )
+        self.joined_errors_df = self.unshorten_errors_df._append(self.clean_errors_df, ignore_index=True)
 
         return self.raw_with_expansion
 
     def clean(self):
-        self.clean_errors_df = pd.DataFrame(
-            {"url": [], "error_message": [], "platform": []}
-        )
+        self.clean_errors_df = pd.DataFrame({"url": [], "error_message": [], "platform": []})
 
         if self.unshorten_executed is False:
             self.raw_with_expansion = self.raw_links.copy()
-            self.raw_with_expansion = [
-                i for i in self.raw_with_expansion if i not in self.shortened_urls_list
-            ]
-            self.raw_with_expansion = [
-                re.sub("https?://(www\.)?", "", i) for i in self.raw_with_expansion
-            ]
+            self.raw_with_expansion = [i for i in self.raw_with_expansion if i not in self.shortened_urls_list]
+            self.raw_with_expansion = [re.sub("https?://(www\.)?", "", i) for i in self.raw_with_expansion]
 
         # categorize and format social media links
         self.sm_urls_list = []
@@ -137,9 +114,7 @@ class formatter:
         self.sm_platforms_re = "^(m\.|mobile\.)?(odysee|vk\.|instagram|twitter|facebook|fb\.watch|\
 youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|gab\.com|4chan\.org).*"
         self.sm_filter = re.compile(self.sm_platforms_re)
-        self.sm_with_expansion = [
-            i for i in self.raw_with_expansion if self.sm_filter.match(i)
-        ]
+        self.sm_with_expansion = [i for i in self.raw_with_expansion if self.sm_filter.match(i)]
 
         for link in self.raw_with_expansion:
             if re.match("(css|photos|messages|#go_to_message|\)\[\^)", link):
@@ -151,18 +126,13 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
             else:
                 self.non_sm_urls_list.append(re.sub("/.*", "", link))
 
-        self.sm_with_expansion = [
-            re.sub("^(m\.|mobile\.)", "", i)
-            for i in self.sm_with_expansion
-            if not re.match("m\.tiktok\.com", i)
-        ]
+        self.sm_with_expansion = [re.sub("^(m\.|mobile\.)", "", i) for i in self.sm_with_expansion
+                                  if not re.match("m\.tiktok\.com", i)]
         for link in self.sm_with_expansion:
             if re.match("(instagram\.com/p/|instagram\.com/tv)", link):
                 self.ig_garbage.append(link)
             elif re.search(
-                "(twitter\.com/.*/status|facebook\.com/.*/posts|reddit\.com/r/.*/comments)",
-                link,
-            ):
+                "(twitter\.com/.*/status|facebook\.com/.*/posts|reddit\.com/r/.*/comments)", link):
                 link = re.sub("(/status.*|/posts.*|/comments.*)", "", link)
                 self.sm_urls_list.append(link)
             elif re.match("twitter\.com/hashtag", link):
@@ -182,22 +152,9 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
                 self.sm_urls_list.append(link)
             elif re.search("youtube\.com/channel", link):
                 try:
-                    page_content = requests.get(
-                        "https://" + link, headers=self.headers
-                    ).content
-                    if (
-                        len(
-                            re.findall(
-                                '(?<="webCommandMetadata":{"url":"/).*(?=/featured)',
-                                str(page_content),
-                            )
-                        )
-                        != 0
-                    ):
-                        link = re.findall(
-                            '(?<="webCommandMetadata":{"url":"/).*(?=/featured)',
-                            str(page_content),
-                        )
+                    page_content = requests.get("https://" + link, headers=self.headers).content
+                    if (len(re.findall('(?<="webCommandMetadata":{"url":"/).*(?=/featured)', str(page_content)))!= 0):
+                        link = re.findall('(?<="webCommandMetadata":{"url":"/).*(?=/featured)', str(page_content))
                         link = "youtube.com/" + link[0]
                         #                 print('yt channel: ' + link)
                         self.sm_urls_list.append(link)
@@ -216,22 +173,9 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
                 self.youtube_watch_list.append(link)
             elif re.match("odysee\.com/[^@]", link):
                 try:
-                    page_content = requests.get(
-                        "https://" + link, headers=self.headers
-                    ).content
-                    if (
-                        len(
-                            re.findall(
-                                '(?<="og:url" content="https://)[\.@-_/a-zA-Z0-9]+',
-                                str(page_content),
-                            )
-                        )
-                        != 0
-                    ):
-                        link = re.findall(
-                            '(?<="og:url" content="https://)[\.@-_/a-zA-Z0-9]+',
-                            str(page_content),
-                        )[0]
+                    page_content = requests.get("https://" + link, headers=self.headers).content
+                    if (len(re.findall('(?<="og:url" content="https://)[\.@-_/a-zA-Z0-9]+', str(page_content)))!= 0):
+                        link = re.findall('(?<="og:url" content="https://)[\.@-_/a-zA-Z0-9]+', str(page_content))[0]
                         self.sm_urls_list.append(link)
                     else:
                         self.odysee_garbage.append(link)
@@ -248,12 +192,8 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
                 self.sm_urls_list.append(link)
             elif re.match("bitchute\.com", link):
                 try:
-                    page_content = requests.get(
-                        "https://" + link, headers=self.headers
-                    ).content
-                    link = re.findall(
-                        '(?<=channel/)[-_a-zA-Z0-9]+(?=/")', str(page_content)
-                    )
+                    page_content = requests.get("https://" + link, headers=self.headers).content
+                    link = re.findall('(?<=channel/)[-_a-zA-Z0-9]+(?=/")', str(page_content))
                     link = "bitchute.com/" + str(link[0])
                     self.sm_urls_list.append(link)
                 except Exception as error:
@@ -270,14 +210,10 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
                     self.sm_urls_list.append(link)
                 else:
                     try:
-                        page_content = requests.get(
-                            "https://" + link, headers=self.headers
-                        ).content
+                        page_content = requests.get("https://" + link, headers=self.headers).content
                         soup = BeautifulSoup(page_content, "html.parser")
                         if soup.find("a", class_="media-by--a").get("href") != "":
-                            user_channel = soup.find("a", class_="media-by--a").get(
-                                "href"
-                            )
+                            user_channel = soup.find("a", class_="media-by--a").get("href")
                             link = "rumble.com" + user_channel
                             self.sm_urls_list.append(link)
                         else:
@@ -295,17 +231,10 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
                     self.sm_urls_list.append(link)
                 else:
                     try:
-                        page_content = requests.get(
-                            "https://" + link, headers=self.headers
-                        ).content
+                        page_content = requests.get("https://" + link, headers=self.headers).content
                         soup = BeautifulSoup(page_content, "html.parser")
-                        if (
-                            len(re.findall(".*(?= on GETTR)", soup.title.get_text()))
-                            != 0
-                        ):
-                            user = re.findall(".*(?= on GETTR)", soup.title.get_text())[
-                                0
-                            ]
+                        if (len(re.findall(".*(?= on GETTR)", soup.title.get_text()))!= 0):
+                            user = re.findall(".*(?= on GETTR)", soup.title.get_text())[0]
                             link = "gettr.com/user/" + user
                             self.sm_urls_list.append(link)
                         else:
@@ -335,9 +264,7 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
             else:
                 self.sm_other_urls_list.append(re.sub("/$", "", link))
 
-        self.sm_other_urls_list = [
-            re.sub("\?.*", "", i) for i in self.sm_other_urls_list
-        ]
+        self.sm_other_urls_list = [re.sub("\?.*", "", i) for i in self.sm_other_urls_list]
         self.sm_urls_list = self.sm_urls_list + self.sm_other_urls_list
 
         # format yt_watch links
@@ -456,8 +383,7 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
         )
 
         # final_overall_garbage will tell us how many lines were put in a garbage
-        # list while converting raw_links to formatted_links.
-        # We want this to equal final_difference.
+        # list while converting raw_links to formatted_links. We want this to equal final_difference.
         if self.unshorten_executed is True:
             self.final_overall_garbage = len(
                 self.final_sm_garbage
@@ -480,9 +406,7 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
         # garbage_less_difference will tell us how many of the lines that were discarded
         # in the process of converting raw_links to  formatted_links are unaccounted for
         # by final_overall_garbage. We want this to equal zero.
-        self.garbage_less_difference = (
-            self.final_overall_garbage - self.final_difference
-        )
+        self.garbage_less_difference = (self.final_overall_garbage - self.final_difference)
 
         self.garbage_df = pd.DataFrame(
             {
@@ -542,17 +466,12 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
 not unshortened owing to formatter.unshorten() not having been executed."
             )
 
-        print(
-            "\nThe number of lines included in each garbage bin are:\n\n {0}\n".format(
-                self.garbage_df.to_string(index=False)
-            )
-        )
+        print("\nThe number of lines included in each garbage bin are:\n\n {0}\n".format(
+                self.garbage_df.to_string(index=False)))
 
         self.clean_executed = True
 
-        self.joined_errors_df = self.unshorten_errors_df._append(
-            self.clean_errors_df, ignore_index=True
-        )
+        self.joined_errors_df = self.unshorten_errors_df._append(self.clean_errors_df, ignore_index=True)
 
         return self.formatted_links
 
@@ -597,11 +516,9 @@ if __name__ == "__main__":
 
                 if u is True and c is True:
                     formatter_obj = formatter(raw_links)
-                    expanded_links = formatter_obj.unshorten()
+                    formatter_obj.unshorten()
                     cleaned_links = formatter_obj.clean()
-                    with open(
-                        identifier + "_cleaned_unshortened_links.txt", "w"
-                    ) as file:
+                    with open(identifier + "_cleaned_unshortened_links.txt", "w") as file:
                         for link in cleaned_links:
                             file.write(link + "\n")
                 elif u is True:
