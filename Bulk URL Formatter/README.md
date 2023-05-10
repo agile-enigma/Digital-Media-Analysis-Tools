@@ -1,5 +1,5 @@
 # Bulk URL Formatter
-Bulk URL Formatter is intended to solve the problem of converting a list of URLs into a format that is analytically useful. The project that it was developed for can be found at: https://irregularhorizons.substack.com/p/the-dugin-international. As examples, it will: 
+Bulk URL Formatter is intended to solve the problem of converting a list of URLs into a format that is analytically useful. The research project that it was developed for can be found at: https://irregularhorizons.substack.com/p/the-dugin-international. As examples, it will: 
 1) Convert a link to a specific post on a social media platform to the URL for the poster's profile.
 2) Convert short URLs to the URLs that they shorten.
 3) Remove subdirectories from URLs, leaving only domains.
