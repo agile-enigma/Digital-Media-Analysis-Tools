@@ -99,8 +99,6 @@ class formatter:
         )
 
         return self.raw_with_expansion
-        # discarded = len(self.raw_links) - len(raw_with_expansion + shortened_urls_garbage)
-        # print(f'{discarded} links have been lost up to this point')
 
     def clean(self):
         self.clean_errors_df = pd.DataFrame(
@@ -211,7 +209,6 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
                         error,
                         "youtube",
                     ]
-                    #                 print(error)
                     self.youtube_garbage.append(link)
             elif re.match("youtube\.com/results", link):
                 self.youtube_garbage.append(link)
@@ -336,7 +333,6 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
                 else:
                     self.tiktok_garbage.append(link)
             else:
-                #             print('sm other: ' + link)
                 self.sm_other_urls_list.append(re.sub("/$", "", link))
 
         self.sm_other_urls_list = [
@@ -364,7 +360,6 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
                     error,
                     "youtube_watch",
                 ]
-                #         print('yt watch error: ' + str(error))
                 self.yt_watch_garbage.append(link)
 
         # format fb_watch links
@@ -389,7 +384,6 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
                     error,
                     "fb_watch",
                 ]
-                #         print('fb watch error: ' + str(error))
                 self.fb_watch_garbage.append(link)
 
         # format vk links
@@ -406,7 +400,6 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
                     href_list = soup.find_all("a")
                     if str(href_list[3].get("href")) != "":
                         link = "vk.com" + str(href_list[3].get("href"))
-                        #                 print(link)
                         self.sm_urls_list.append(link)
                     else:
                         self.vk_garbage.append(link)
@@ -425,7 +418,6 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
                     soup_find = soup.find("link", attrs={"rel": "canonical"})
                     if re.findall("vk\.com/[-_a-zA-Z0-9]+", str(soup_find))[0] != "":
                         link = re.findall("vk\.com/[-_a-zA-Z0-9]+", str(soup_find))[0]
-                        #                 print(link)
                         self.sm_urls_list.append(link)
                     else:
                         self.vk_garbage.append(link)
@@ -440,7 +432,6 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
                     "vk",
                 ]
                 self.vk_garbage.append(link)
-        #         print('error:', link)
 
         # compile and sort final links list
         self.formatted_links = self.sm_urls_list + self.non_sm_urls_list
