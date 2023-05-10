@@ -120,7 +120,7 @@ class formatter:
         self.rumble_garbage = []
         self.gettr_garbage = []
         self.mail_garbage = []
-        self.garbage = []
+        self.non_url_garbage = []
 
         self.sm_platforms_re = '^(m\.|mobile\.)?(odysee|vk\.|instagram|twitter|facebook|fb\.watch|\
 youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|gab\.com|4chan\.org).*'
@@ -129,7 +129,7 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
 
         for link in self.raw_with_expansion:
             if re.match('(css|photos|messages|#go_to_message|\)\[\^)', link):
-                self.garbage.append(link)
+                self.non_url_garbage.append(link)
             elif re.match('mailto', link):
                 self.mail_garbage.append(link)
             elif link in self.sm_with_expansion:
@@ -137,7 +137,8 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
             else:
                 self.non_sm_urls_list.append(re.sub('/.*', '', link))
 
-        self.sm_with_expansion = [re.sub('^(m\.|mobile\.)', '', i) for i in self.sm_with_expansion if not re.match('m\.tiktok\.com', i)]
+        self.sm_with_expansion = [re.sub('^(m\.|mobile\.)', '', i) for i in self.sm_with_expansion 
+                                  if not re.match('m\.tiktok\.com', i)]
         for link in self.sm_with_expansion:
             if re.match('(instagram\.com/p/|instagram\.com/tv)', link):
                 self.ig_garbage.append(link)
@@ -362,11 +363,11 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
         # list while converting raw_links to formatted_links.
         # We want this to equal final_difference.
         if self.unshorten_executed is True:
-            self.final_overall_garbage = len(self.final_sm_garbage + self.garbage + self.shortened_urls_garbage \
-                                             + self.mail_garbage)
+            self.final_overall_garbage = len(self.final_sm_garbage + self.non_url_garbage +
+                                             self.shortened_urls_garbage + self.mail_garbage)
         else:
-            self.final_overall_garbage = len(self.final_sm_garbage + self.garbage + self.shortened_urls_list \
-                                             + self.mail_garbage)
+            self.final_overall_garbage = len(self.final_sm_garbage + self.non_url_garbage +
+                                             self.shortened_urls_list + self.mail_garbage)
 
         # final_difference will tell us how many lines were discarded in the process
         #of converting raw_links to formatted_links
@@ -378,9 +379,9 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
         self.garbage_less_difference = self.final_overall_garbage - self.final_difference
 
         self.garbage_df = pd.DataFrame({
-            'type': ['garbage', 'facebook', 'instagram', 'youtube', 'yt_watch', 'fb_watch', 'vkontakte',
+            'type': ['non_url_garbage', 'facebook', 'instagram', 'youtube', 'yt_watch', 'fb_watch', 'vkontakte',
                      'bitchute', 'odysee', 'rumble', 'gettr', 'tiktok', 'shortened_urls'],
-            'count': [len(self.garbage), len(self.facebook_garbage), len(self.ig_garbage),
+            'count': [len(self.non_url_garbage), len(self.facebook_garbage), len(self.ig_garbage),
                       len(self.youtube_garbage), len(self.yt_watch_garbage), len(self.fb_watch_garbage),
                       len(self.vk_garbage), len(self.bitchute_garbage), len(self.odysee_garbage),
                       len(self.rumble_garbage), len(self.gettr_garbage), len(self.tiktok_garbage),
@@ -395,7 +396,7 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
               f"{round((len(self.final_sm_garbage) / len(self.formatted_links + self.final_sm_garbage))*100, 2)}% of " +
               f"formatted_links + final_sm_garbage." + "\n\n" +
               f"{self.final_difference} lines in total were discarded in the cleaning process, " +
-              f"of which {len(self.garbage)} were non-URLs." + "\n\n" +
+              f"of which {len(self.non_url_garbage)} were non-URLs." + "\n\n" +
               f"{len(self.clean_errors_df)} errors were produced in the cleaning process.")
 
         if self.unshorten_executed is False:
