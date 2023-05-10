@@ -29,11 +29,13 @@ To run it from the command line simply type "python3 url_formatter.py" along wit
 <img width="352" alt="Screenshot 2023-04-30 at 1 20 42 AM" src="https://user-images.githubusercontent.com/110642777/235337006-2250052b-9e1d-40b9-86a9-07120316ee29.png">
 
 
-The -c/--clean option will run the program's clean() method, which does the work of cleaning URLs. The -u/--unshorten option runs the unshorten() method, which unshortens URLs. Both command line options will output their results to a text file located in the directory that the script is executed from. Both options can be run together, in which case the script will first run the unshorten() method and then the clean() method.
+The -u/--unshorten option runs the unshorten() method, which unshortens URLs. The -c/--clean option will run the program's clean() method, which does the work of cleaning URLs. Both command line options will output their results to a text file located in the directory that the script is executed from. These options can be run together, in which case the script will first run the unshorten() method and then the clean() method.
 
 To use the tool as a module, first create a formatter object by typing "example_name = url_formatter.formatter(SOME_LIST)", where SOME_LIST is a list containing the unformatted/unshortened URLs that you would like to convert. As noted, Bulk URL Formatter has two methods, unshorten() and clean(). 
 
-After creating a url_formatter object executing a method is as simple as typing either "example_name.unshorten()" or "example_name.clean()". These methods will return a list containing the unshortened or cleaned URLs. If your list contains shortened URLs, it is advised that you run the unshorten() method first.
+After creating a url_formatter object executing a method is as simple as typing either "example_name.unshorten()" or "example_name.clean()". The unshorten() method will return a list containing both URLs that weren't originally shortened as well as URLS that it unshortened. The clean() method will return a list containing cleaned URLs. If the unshorten() method wasn't previously executed, clean() will discard shortened URLs. If unshorten() was previously executed, unshortened URLs will be included in the list processed by clean().
+
+If your list contains shortened URLs, it is advised that you run the unshorten() method first.
 
 # Built-in Integrity Check and Troubleshooting Features 
 
