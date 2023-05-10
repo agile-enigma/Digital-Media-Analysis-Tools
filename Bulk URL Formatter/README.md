@@ -21,6 +21,11 @@ It should be noted that as this tool was created for cleaning links scraped from
 
 If you prefer to use this tool as a Jupyter Notebook you can find that at: https://github.com/agile-enigma/Blog-Research-Projects/blob/main/The%20Dugin%20International/format%2Banalyze_links_GitHub.ipynb
 
+# Installation
+Perhaps the most straightforward way to create a copy of the program on your computer is to click on the "url_formatter.py" file and copy-paste the code into a similarly named .py file.
+
+Please bear with me as I organized my projects in a way that makes the most sense for me. 
+
 # Usage
 This tool can either be run from the command line as a script, or imported as a module. 
 
