@@ -24,7 +24,7 @@ If you prefer to use this tool as a Jupyter Notebook you can find that at: https
 # Installation
 Perhaps the most straightforward way to create a copy of the program on your computer is to click on the "url_formatter.py" file and copy-paste the code into a similarly named .py file.
 
-Please bear with me as I organized my projects in a way that makes the most sense for me. 
+Please bear with me as I organize my projects in a way that makes the most sense for me. 
 
 # Usage
 This tool can either be run from the command line as a script, or imported as a module. 
