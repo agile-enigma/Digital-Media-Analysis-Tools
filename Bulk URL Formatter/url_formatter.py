@@ -9,7 +9,7 @@ import urlexpander
 
 class formatter:
     """ Produces a class object from a provided URLs list and initializes with attributes common to both unshorten() and clean().
-    """
+"""
     
     def __init__(self, raw_links):
         self.raw_links = raw_links
@@ -40,17 +40,17 @@ class formatter:
 
     def unshorten(self):
         """Unshortens shortened URLs contained in self.shortened_urls_list. After completion unshorten()
-        returns 'self.raw_with_expansion', a list combining unshortened URLs with URLs that weren't
-        originally shortened.
+returns 'self.raw_with_expansion', a list combining unshortened URLs with URLs that weren't
+originally shortened.
         
-        If not exectuted prior to running clean(), clean() will discard shortened URLs.
+If not exectuted prior to running clean(), clean() will discard shortened URLs.
         
-        workflow:
+workflow:
         
-        unshorten URLs using requests--> extract non-social media URLs from 'raw_links' into 'self.not_shortened_links'
-        -->produce 'self.raw_with_expansion', a list combining unshortened URLs with 'self.not_shortened_links'-->
-        set 'self.unshorten_executed' to True-->print success metric-->return 'self.raw_with_expansion'
-        """
+unshorten URLs using requests--> extract non-social media URLs from 'raw_links' into 'self.not_shortened_links'
+-->produce 'self.raw_with_expansion', a list combining unshortened URLs with 'self.not_shortened_links'-->
+set 'self.unshorten_executed' to True-->print success metric-->return 'self.raw_with_expansion'
+"""
         
         self.not_shortened_links = []
         self.expanded_urls_list = []
@@ -101,17 +101,17 @@ class formatter:
 
     def clean(self):
         """ clean() reformats URLs into an analytically useful format. For non-social media URLs,
-        this involves extracting domain names; for social media URLs, this includes converting a link to
-        a specific post to the URL for the account of the user that posted it.
+this involves extracting domain names; for social media URLs, this includes converting a link to
+a specific post to the URL for the account of the user that posted it.
         
-        Additionally, it will collate any errors and discarded URLs and print metrics to the screen after completion.
+Additionally, it will collate any errors and discarded URLs and print metrics to the screen after completion.
         
-        workflow:
+workflow:
         
-        if unshorten() not executed discard shortened URLs--> extract social media URls--> sort and process social media
-        URLs--> format non-social media URLs--> format special-case social media URLs--> produce error and discard metrics
-        --> return list of cleaned URLs
-        """
+if unshorten() not executed discard shortened URLs--> extract social media URls--> sort and process social media
+URLs--> format non-social media URLs--> format special-case social media URLs--> produce error and discard metrics
+--> return list of cleaned URLs
+"""
         
         self.clean_errors_df = pd.DataFrame({"url": [], "error_message": [], "platform": []})
 
