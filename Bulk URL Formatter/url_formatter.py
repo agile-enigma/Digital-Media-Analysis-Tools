@@ -67,7 +67,7 @@ class formatter:
         
         Workflow
         -------- 
-        unshorten URLs using requests
+        --> unshorten URLs using requests
         --> extract non-social media URLs from self.raw_links into self.not_shortened_links
         --> produce self.raw_with_expansion
         --> set self.unshorten_executed' to True
@@ -140,7 +140,7 @@ class formatter:
         
         Workflow
         --------
-        if unshorten() not executed discard shortened URLs
+        --> if unshorten() not executed discard shortened URLs
         --> extract social media URls
         --> sort and process social mediaURLs
         --> format non-social media URLs
