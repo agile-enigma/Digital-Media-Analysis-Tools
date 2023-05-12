@@ -8,11 +8,14 @@ import urlexpander
 
 
 class formatter:
+    """ Produces a class object from a provided URLs list and initializes with attributes common to both unshorten() and clean().
+    """
+    
     def __init__(self, raw_links):
         self.raw_links = raw_links
 
-        # known_shorteners contains a list of url shorteners that will
-        # be used to extract shortened URLs from raw_links
+        """ known_shorteners contains a list of url shorteners that will
+        be used to extract shortened URLs from raw_links. """
         self.known_shorteners = urlexpander.constants.all_short_domains.copy()
         self.known_shorteners += ["youtu.be", "shorturl.me"]
 
@@ -23,7 +26,7 @@ class formatter:
         ]
         self.shortened_urls_garbage = []
 
-        # errors_df is a pandas dataframe containing error messages
+        # these two pandas dataframes will store error messages in a searchable format for formatter's two methods
         self.unshorten_errors_df = pd.DataFrame({"url": [], "error_message": [], "platform": []})
         self.clean_errors_df = pd.DataFrame({"url": [], "error_message": [], "platform": []})
 
@@ -36,6 +39,19 @@ class formatter:
         self.clean_executed = False
 
     def unshorten(self):
+        """Unshortens shortened URLs contained in self.shortened_urls_list. After completion unshorten()
+        returns 'self.raw_with_expansion', a list combining unshortened URLs with URLs that weren't
+        originally shortened.
+        
+        If not exectuted prior to running clean(), clean() will discard shortened URLs.
+        
+        workflow:
+        
+        unshorten URLs using requests--> extract non-social media URLs from 'raw_links' into 'self.not_shortened_links'
+        -->produce 'self.raw_with_expansion', a list combining unshortened URLs with 'self.not_shortened_links'-->
+        set 'self.unshorten_executed' to True-->print success metric-->return 'self.raw_with_expansion'
+        """
+        
         self.not_shortened_links = []
         self.expanded_urls_list = []
         self.shortened_urls_garbage = []
@@ -51,13 +67,13 @@ class formatter:
                 unshortened_url = re.sub("https?://(www\.)?", "", resp.url)
                 self.expanded_urls_list.append(unshortened_url)
             except Exception as error:
-                print(error)
-                print(url)
+                # if there is an error attempt to extract unshortened URL from error message
                 if len(re.findall("(?<=host=').*(?=', port)", str(error))) != 0:
                     unshortened_url = re.findall("(?<=host=').*(?=', port)", str(error))
                     unshortened_url = re.sub("https?://(www\.)?", "", unshortened_url[0])
                     self.expanded_urls_list.append(unshortened_url)
                 else:
+                    #if this is unsuccessful discard shortened URL
                     self.shortened_urls_garbage.append(url)
                     self.unshorten_errors_df.loc[len(self.unshorten_errors_df.index)] = [url, error, "shortened_url"]
 
@@ -84,6 +100,19 @@ class formatter:
         return self.raw_with_expansion
 
     def clean(self):
+        """ clean() reformats URLs into an analytically useful format. For non-social media URLs,
+        this involves extracting domain names; for social media URLs, this includes converting a link to
+        a specific post to the URL for the account of the user that posted it.
+        
+        Additionally, it will collate any errors and discarded URLs and print metrics to the screen after completion.
+        
+        workflow:
+        
+        if unshorten() not executed discard shortened URLs--> extract social media URls--> sort and process social media
+        URLs--> format non-social media URLs--> format special-case social media URLs--> produce error and discard metrics
+        --> return list of cleaned URLs
+        """
+        
         self.clean_errors_df = pd.DataFrame({"url": [], "error_message": [], "platform": []})
 
         if self.unshorten_executed is False:
@@ -117,7 +146,7 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
         self.sm_with_expansion = [i for i in self.raw_with_expansion if self.sm_filter.match(i)]
 
         for link in self.raw_with_expansion:
-            if re.match("(css|photos|messages|#go_to_message|\)\[\^)", link):
+            if re.match("(css|photos|messages|#go_to_message|\)\[\^)", link): # this REGEX discards non-URLs typical of Telegram URL scrapes
                 self.non_url_garbage.append(link)
             elif re.match("mailto", link):
                 self.mail_garbage.append(link)
@@ -129,7 +158,7 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
         self.sm_with_expansion = [re.sub("^(m\.|mobile\.)", "", i) for i in self.sm_with_expansion
                                   if not re.match("m\.tiktok\.com", i)]
         for link in self.sm_with_expansion:
-            if re.match("(instagram\.com/p/|instagram\.com/tv)", link):
+            if re.match("(instagram\.com/p/|instagram\.com/tv)", link): # these are discarded because usernames cannot be extracted from them
                 self.ig_garbage.append(link)
             elif re.search(
                 "(twitter\.com/.*/status|facebook\.com/.*/posts|reddit\.com/r/.*/comments)", link):
@@ -141,7 +170,7 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
                 link = re.sub("/videos.*", "", link)
                 self.sm_urls_list.append(link)
             elif re.match("(facebook\.com/watch|fb\.watch)", link):
-                self.fb_watch_list.append(link)
+                self.fb_watch_list.append(link) # place in a special list for later processing
             elif re.match("facebook\.com/story", link):
                 self.facebook_garbage.append(link)
             elif re.match("t\.me/", link):
@@ -156,7 +185,6 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
                     if (len(re.findall('(?<="webCommandMetadata":{"url":"/).*(?=/featured)', str(page_content)))!= 0):
                         link = re.findall('(?<="webCommandMetadata":{"url":"/).*(?=/featured)', str(page_content))
                         link = "youtube.com/" + link[0]
-                        #                 print('yt channel: ' + link)
                         self.sm_urls_list.append(link)
                     else:
                         self.youtube_garbage.append(link)
@@ -170,7 +198,7 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
             elif re.match("youtube\.com/results", link):
                 self.youtube_garbage.append(link)
             elif re.match("(youtube\.com/watch|youtube\.com/live)", link):
-                self.youtube_watch_list.append(link)
+                self.youtube_watch_list.append(link) # place in a special list for later processing
             elif re.match("odysee\.com/[^@]", link):
                 try:
                     page_content = requests.get("https://" + link, headers=self.headers).content
@@ -204,7 +232,7 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
                     ]
                     self.bitchute_garbage.append(link)
             elif re.match("vk\.com", link):
-                self.vk_list.append(link)
+                self.vk_list.append(link) # place in a special list for later processing
             elif re.match("rumble\.com", link):
                 if re.match("(rumble\.com/user/|rumble\.com/c/)", link):
                     self.sm_urls_list.append(link)
@@ -382,8 +410,8 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
             + self.tiktok_garbage
         )
 
-        # final_overall_garbage will tell us how many lines were put in a garbage
-        # list while converting raw_links to formatted_links. We want this to equal final_difference.
+        """ final_overall_garbage will tell us how many lines were put in a garbage
+        list while converting raw_links to formatted_links. We want this to equal final_difference. """
         if self.unshorten_executed is True:
             self.final_overall_garbage = len(
                 self.final_sm_garbage
@@ -399,13 +427,13 @@ youtube\.com|t\.me|tiktok\.|vm\.tiktok|bitchute|gettr\.com|reddit\.|rumble\.com|
                 + self.mail_garbage
             )
 
-        # final_difference will tell us how many lines were discarded in the process
-        # of converting raw_links to formatted_links
+        """ final_difference will tell us how many lines were discarded in the process
+        of converting raw_links to formatted_links """
         self.final_difference = len(self.raw_links) - len(self.formatted_links)
 
-        # garbage_less_difference will tell us how many of the lines that were discarded
-        # in the process of converting raw_links to  formatted_links are unaccounted for
-        # by final_overall_garbage. We want this to equal zero.
+        """ garbage_less_difference will tell us how many of the lines that were discarded
+        in the process of converting raw_links to  formatted_links are unaccounted for
+        by final_overall_garbage. We want this to equal zero. """
         self.garbage_less_difference = (self.final_overall_garbage - self.final_difference)
 
         self.garbage_df = pd.DataFrame(
@@ -513,7 +541,7 @@ if __name__ == "__main__":
                     lines = file.readlines()
                     for line in lines:
                         raw_links.append(line.replace("\n", ""))
-
+                # if options u and c are provided, first run unshorten() and then clean()
                 if u is True and c is True:
                     formatter_obj = formatter(raw_links)
                     formatter_obj.unshorten()
