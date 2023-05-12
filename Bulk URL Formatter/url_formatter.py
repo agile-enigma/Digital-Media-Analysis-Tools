@@ -124,9 +124,9 @@ class formatter:
 
     def clean(self):
         """
-        Reformat URLs into an analytically useful format. For non-social media URLs,
-        this involves extracting domain names; for social media URLs, this includes converting a link to
-        a specific post to the URL for the account of the user that posted it.
+        Reformat URLs into an analytically useful format. For non-social media URLs, this involves
+        extracting domain names; for social media URLs, this includes converting a link to a specific
+        post to the URL for the account of the user that posted it.
         
         Additionally, it will collate any errors and discarded URLs and print metrics to the screen
         after completion.
