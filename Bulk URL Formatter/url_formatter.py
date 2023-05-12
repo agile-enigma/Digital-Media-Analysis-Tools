@@ -131,7 +131,7 @@ class formatter:
         Additionally, it will collate any errors and discarded URLs and print metrics to the screen
         after completion.
         
-        **Please note that the REGEX on line 175 will filter out non-links typical of URL scrapes from 
+        **Please note that the REGEX on line 185 will filter out non-links typical of URL scrapes from 
         Telegram chats. Modify as needed***
         
         Returns
