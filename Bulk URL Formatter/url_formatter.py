@@ -8,8 +8,24 @@ import urlexpander
 
 
 class formatter:
-    """ Produces a class object from a provided URLs list and initializes with attributes common to both unshorten() and clean().
-"""
+    """ 
+    Produces a class object from a provided URLs list and initializes with attributes
+    common to both unshorten() and clean().
+    
+    Parameters
+    ----------
+    raw_links: list containing uncleaned and shortened URLs
+    
+    Additional Info for Select Attributes
+    -------------------------------------
+    self.known_shorteners: a list containing a wide variety of URL-shortening services.
+    Used to filter for shortened URLs.
+    
+    self.shortened_urls_list: filtered list containing shortened URLs
+    
+    self.unshorten_executed: Determines whether or not clean() will filter for and discard
+    shortened URLs, which is necessary if unshorten() has not been executed.
+    """
     
     def __init__(self, raw_links):
         self.raw_links = raw_links
@@ -39,18 +55,25 @@ class formatter:
         self.clean_executed = False
 
     def unshorten(self):
-        """Unshortens shortened URLs contained in self.shortened_urls_list. After completion unshorten()
-returns 'self.raw_with_expansion', a list combining unshortened URLs with URLs that weren't
-originally shortened.
+        """
+        Unshortens shortened URLs contained in self.shortened_urls_list. After completion unshorten() returns
+        self.raw_with_expansion, a list combining unshortened URLs with URLs that weren'toriginally shortened.
         
-If not exectuted prior to running clean(), clean() will discard shortened URLs.
+        If not exectuted prior to running clean(), clean() will discard shortened URLs.
         
-workflow:
+        Returns
+        -------
+        self.raw_with_expansion: list containing unshortened URLs + URLs not originally shortened
         
-unshorten URLs using requests--> extract non-social media URLs from 'raw_links' into 'self.not_shortened_links'
--->produce 'self.raw_with_expansion', a list combining unshortened URLs with 'self.not_shortened_links'-->
-set 'self.unshorten_executed' to True-->print success metric-->return 'self.raw_with_expansion'
-"""
+        Workflow
+        -------- 
+        unshorten URLs using requests
+        --> extract non-social media URLs from self.raw_links into self.not_shortened_links
+        --> produce self.raw_with_expansion
+        --> set self.unshorten_executed' to True
+        --> print success metric
+        --> return self.raw_with_expansion
+        """
         
         self.not_shortened_links = []
         self.expanded_urls_list = []
@@ -100,18 +123,31 @@ set 'self.unshorten_executed' to True-->print success metric-->return 'self.raw_
         return self.raw_with_expansion
 
     def clean(self):
-        """ clean() reformats URLs into an analytically useful format. For non-social media URLs,
-this involves extracting domain names; for social media URLs, this includes converting a link to
-a specific post to the URL for the account of the user that posted it.
+        """
+        Reformat URLs into an analytically useful format. For non-social media URLs,
+        this involves extracting domain names; for social media URLs, this includes converting a link to
+        a specific post to the URL for the account of the user that posted it.
         
-Additionally, it will collate any errors and discarded URLs and print metrics to the screen after completion.
+        Additionally, it will collate any errors and discarded URLs and print metrics to the screen
+        after completion.
         
-workflow:
+        **Please note that the REGEX on line 175 will filter out non-links typical of URL scrapes from 
+        Telegram chats. Modify as needed***
         
-if unshorten() not executed discard shortened URLs--> extract social media URls--> sort and process social media
-URLs--> format non-social media URLs--> format special-case social media URLs--> produce error and discard metrics
---> return list of cleaned URLs
-"""
+        Returns
+        --------
+        self.formatted_links: list containing cleaned URLs
+        
+        Workflow
+        --------
+        if unshorten() not executed discard shortened URLs
+        --> extract social media URls
+        --> sort and process social mediaURLs
+        --> format non-social media URLs
+        --> format special-case social media URLs
+        --> produce error and discard metrics
+        --> return list of cleaned URLs.
+        """
         
         self.clean_errors_df = pd.DataFrame({"url": [], "error_message": [], "platform": []})
 
